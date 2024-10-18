@@ -3,9 +3,9 @@ requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "QhX_dynamical"
-version = "0.1.0"  # Start fresh versioning for this new package
-description = "QhX_dynamical: Extending QhX with dynamic mode for light curve analysis"
+name = "QhX_new_dynamical"  # Update this if necessary
+version = "0.1.1"           # Increment the version for new releases
+description = "QhX_new_dynamical: New package with dynamic mode for light curve analysis"
 readme = "README.md"
 requires-python = ">=3.0"
 license = { file = "LICENSE.txt" }
