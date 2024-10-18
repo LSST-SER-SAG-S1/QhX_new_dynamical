@@ -1,0 +1,18 @@
+Starting time for ID TEST : 2024-10-15 23:33:04.183002
+
+REDIRECT
+Processing TEST
+PID 80886
+Duration: 1.0 ticks
+1 seconds each
+Time so far 1s
+
+Processing TEST
+PID 80886
+Duration: 2.0 ticks
+1 seconds each
+Time so far 2s
+
+End time for ID TEST : 2024-10-15 23:33:07.187795
+Total time : 0:00:03.004793
+
