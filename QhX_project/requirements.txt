@@ -1,0 +1,15 @@
+numpy
+pandas
+scipy
+scikit-learn
+scikit-optimize
+libwwz
+colorednoise
+tqdm
+pyarrow
+panel
+hvplot 
+datashader
+bokeh
+dask[dataframe]
+traitlets
