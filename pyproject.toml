@@ -44,7 +44,7 @@ dependencies = [
 ]
 
 [project.urls]
-Documentation = "https://lionandjelka.github.io/QhX_dynamical/introduction.html"
+Documentation = "https://lionandjelka.github.io/QhX_new_dynamical"
 
 [tool.setuptools]
 packages = ["QhX"]  # Keep internal module names as QhX to maintain backward compatibility
