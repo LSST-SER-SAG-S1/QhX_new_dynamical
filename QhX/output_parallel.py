@@ -76,7 +76,7 @@ def classify_periods(detected_periods):
             for j in range(i + 1, len(quasar_data)):
                 row_i = quasar_data.iloc[i]
                 row_j = quasar_data.iloc[j]
-                iou, period_diff = np.nan, np.nan    
+                iou, period_diff = np.nan, np.nan
                 # Check if necessary values are not NaN before calculating IoU and period difference
                 if not pd.isna(row_i['Common period (Band1 & Band1)']) and not pd.isna(row_j['Common period (Band1 & Band1)']) and not pd.isna(row_i['Upper error bound']) and not pd.isna(row_i['Lower error bound']) and not pd.isna(row_j['Upper error bound']) and not pd.isna(row_j['Lower error bound']):
                     period_diff = abs(row_i['Common period (Band1 & Band1)'] - row_j['Common period (Band1 & Band1)']) / max(row_i['Common period (Band1 & Band1)'], 1e-7)  # Avoid division by zero
@@ -89,11 +89,11 @@ def classify_periods(detected_periods):
                 rows_list.append({
                     'ID': name,
                     'm3': row_i['Common period (Band1 & Band1)'],  # Adjusted to use 'Common period (Band1 & Band1)' directly
-                    'm4': row_i['Lower error bound'],  
-                    'm5': row_i['Upper error bound'],  
-                    'm6': row_i['Significance'],  
-                    'm7_1': row_i['Band1'],  
-                    'm7_2': row_j['Band2'],  
+                    'm4': row_i['Lower error bound'],
+                    'm5': row_i['Upper error bound'],
+                    'm6': row_i['Significance'],
+                    'm7_1': row_i['Band1'],
+                    'm7_2': row_j['Band2'],
                     'period_diff': period_diff,
                     'iou': iou
                 })

@@ -80,34 +80,34 @@ def get_lc_dyn(data_manager, set1, include_errors=False):
  #   np.random.seed(int(set1))  # Seed with the object ID for reproducibility
     if set1 not in data_manager.fs_gp.groups:
         print(f"Set ID {set1} not found.")
-        return None    
+        return None
     demo_lc = data_manager.fs_gp.get_group(set1)
-    available_filters = sorted(demo_lc['filter'].unique())    
+    available_filters = sorted(demo_lc['filter'].unique())
     # Initialize containers for time series data and sampling rates
     tt_with_errors = {}
     ts_with_errors = {}
-    sampling_rates = {}    
+    sampling_rates = {}
     for filter_value in available_filters:
         d = demo_lc[demo_lc['filter'] == filter_value].sort_values(by=['mjd']).dropna()
         if d.empty:
             print(f"No data for filter {filter_value} in set {set1}.")
-            continue  # Skip this filter and move to the next one        
+            continue  # Skip this filter and move to the next one
         # Extract time (mjd), magnitude (psMag), and errors (psMagErr)
         tt, yy = d['mjd'].to_numpy(), d['psMag'].to_numpy()
-        err_mag = d['psMagErr'].to_numpy() if 'psMagErr' in d.columns and include_errors else None        
+        err_mag = d['psMagErr'].to_numpy() if 'psMagErr' in d.columns and include_errors else None
         # Handle outliers
         if include_errors and err_mag is not None:
             tt, yy, err_mag = outliers_mad(tt, yy, err_mag)
         else:
-            tt, yy = outliers_mad(tt, yy)        
+            tt, yy = outliers_mad(tt, yy)
         ts_with_or_without_errors = yy  # Use magnitudes (psMag) as is
         if include_errors and err_mag is not None:
             # Add random noise based on magnitude errors, seeded by object ID
-            ts_with_or_without_errors += np.random.normal(0, err_mag, len(tt))        
+            ts_with_or_without_errors += np.random.normal(0, err_mag, len(tt))
         # Store time series and sampling rate by filter
         tt_with_errors[filter_value] = tt
         ts_with_errors[filter_value] = ts_with_or_without_errors
-        sampling_rates[filter_value] = np.mean(np.diff(tt)) if len(tt) > 1 else 0    
+        sampling_rates[filter_value] = np.mean(np.diff(tt)) if len(tt) > 1 else 0
     return tt_with_errors, ts_with_errors, sampling_rates
 
 
@@ -120,45 +120,45 @@ def process1_new_dyn(data_manager, set1, ntau=None, ngrid=None, provided_minfq=N
         print(f"Set ID {set1} not found.")
         return None
     # Retrieve the light curves with a fixed seed to ensure consistency
-    light_curves_data = get_lc_dyn(data_manager, set1, include_errors)    
+    light_curves_data = get_lc_dyn(data_manager, set1, include_errors)
     if light_curves_data is None:
         print(f"Insufficient data for set ID {set1}.")
-        return None    
+        return None
     # Unpack the data (handle varying numbers of filters)
     tt_with_errors, ts_with_errors, sampling_rates = light_curves_data
-    available_filters = list(tt_with_errors.keys())  # List of available filters, dynamically obtained    
-    results = []    
+    available_filters = list(tt_with_errors.keys())  # List of available filters, dynamically obtained
+    results = []
     for filter_value in available_filters:
         tt = tt_with_errors.get(filter_value)
         yy = ts_with_errors.get(filter_value)
         if tt is None or yy is None:
-            continue  # Skip filters with missing data        
+            continue  # Skip filters with missing data
         # Perform wavelet analysis or period detection on the simulated light curve
         wwz_matrix, corr, extent = hybrid2d(tt, yy, ntau=ntau, ngrid=ngrid, minfq=provided_minfq, maxfq=provided_maxfq, parallel=parallel)
         peaks, hh, r_periods, up, low = periods(set1, corr, ngrid=ngrid, plot=False, minfq=provided_minfq, maxfq=provided_maxfq)
-        results.append((r_periods, up, low, peaks, hh))    
+        results.append((r_periods, up, low, peaks, hh))
     if not results:
-        return None  # No valid results    
+        return None  # No valid results
     light_curve_labels = [str(f) for f in available_filters]  # Create labels for the available filters
-    det_periods = []    
+    det_periods = []
     # Track already compared filter pairs to avoid redundant comparisons
-    compared_pairs = set()    
+    compared_pairs = set()
     # Compare results across all filter pairs dynamically
     for i in range(len(results)):
         for j in range(i + 1, len(results)):
             # Create a key for this pair of filters to ensure uniqueness
-            pair_key = frozenset([available_filters[i], available_filters[j]])            
+            pair_key = frozenset([available_filters[i], available_filters[j]])
             # Skip the pair if it has already been compared
             if pair_key in compared_pairs:
-                continue            
+                continue
             # Mark this pair as compared
-            compared_pairs.add(pair_key)            
+            compared_pairs.add(pair_key)
             r_periods_i, up_i, low_i, peaks_i, hh_i = results[i]
             r_periods_j, up_j, low_j, peaks_j, hh_j = results[j]
             filter_i = available_filters[i]
-            filter_j = available_filters[j]            
+            filter_j = available_filters[j]
             r_periods_common, u_common, low_common, sig_common = same_periods(
-                r_periods_i, r_periods_j, up_i, low_i, up_j, low_j, peaks_i, hh_i, 
+                r_periods_i, r_periods_j, up_i, low_i, up_j, low_j, peaks_i, hh_i,
                 tt_with_errors[filter_i], ts_with_errors[filter_i],
                 peaks_j, hh_j, tt_with_errors[filter_j], ts_with_errors[filter_j],
                 ntau=ntau, ngrid=ngrid, minfq=provided_minfq, maxfq=provided_maxfq
@@ -185,7 +185,7 @@ def process1_new_dyn(data_manager, set1, ntau=None, ngrid=None, provided_minfq=N
                         "lower_error": low_common[k],
                         "significance": round(sig_common[k], 2),  # Ensure two decimal places for significance
                         "label": f"{light_curve_labels[i]}-{light_curve_labels[j]}"
-                    })                    
+                    })
     return det_periods
 
 

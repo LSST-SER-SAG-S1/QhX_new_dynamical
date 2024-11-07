@@ -1,9 +1,9 @@
 import unittest
 from QhX.utils.mock_lc import simple_mock_lc
 from QhX.utils import  correlation
-from QhX.algorithms.wavelets.wwtz import *  
+from QhX.algorithms.wavelets.wwtz import *
 #from QhX.algorithms.wavelets.wwt import hybrid2d, inp_param,estimate_wavelet_periods
-from QhX.calculation import periods, signif_johnson  
+from QhX.calculation import periods, signif_johnson
 from QhX.plots.reg import plt_freq_heatmap, fig_plot
 
 

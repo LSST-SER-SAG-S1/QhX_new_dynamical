@@ -5,7 +5,7 @@ from scipy.stats.mstats import mquantiles
 from scipy import interpolate, optimize
 from scipy.signal import find_peaks
 from sklearn.utils import shuffle
-from QhX.algorithms.wavelets.wwtz import *  
+from QhX.algorithms.wavelets.wwtz import *
 from QhX.utils.correlation import correlation_nd
 import matplotlib.pyplot as plt
 

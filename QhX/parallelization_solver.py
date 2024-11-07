@@ -20,19 +20,19 @@ HEADER = "ID,Sampling_1,Sampling_2,Common period (Band1 & Band2),Upper error bou
 class ParallelSolver(IParallelSolver):
     """
     A class to manage parallel execution of data processing functions.
-    """    
+    """
     def __init__(self,
-                 delta_seconds=DEFAULT_LOG_PERIOD, 
+                 delta_seconds=DEFAULT_LOG_PERIOD,
                  num_workers=DEFAULT_NUM_WORKERS,
                  data_manager=None,
-                 log_time=True, 
+                 log_time=True,
                  log_files=False,
                  save_results=True,
                  process_function=process1_new,  # Default is fixed mode
                  parallel_arithmetic=False,
                  ntau=DEFAULT_NTAU,
-                 ngrid=DEFAULT_NGRID, 
-                 provided_minfq=DEFAULT_PROVIDED_MINFQ, 
+                 ngrid=DEFAULT_NGRID,
+                 provided_minfq=DEFAULT_PROVIDED_MINFQ,
                  provided_maxfq=DEFAULT_PROVIDED_MAXFQ,
                  mode='fixed'  # New mode parameter, default to 'fixed'
                 ):
@@ -68,12 +68,12 @@ class ParallelSolver(IParallelSolver):
     def get_process_function_result(self, set_id):
         """Run the detection function and return the result"""
         result = self.process_function(self.data_manager,
-                                       set_id, 
-                                       ntau=self.ntau, 
-                                       ngrid=self.ngrid, 
-                                       provided_minfq=self.provided_minfq, 
-                                       provided_maxfq=self.provided_maxfq, 
-                                       parallel=self.parallel_arithmetic, 
+                                       set_id,
+                                       ntau=self.ntau,
+                                       ngrid=self.ngrid,
+                                       provided_minfq=self.provided_minfq,
+                                       provided_maxfq=self.provided_maxfq,
+                                       parallel=self.parallel_arithmetic,
                                        include_errors=False)
         return result
     

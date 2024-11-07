@@ -24,7 +24,7 @@ class IParallelSolver():
     
     Attributes:
         num_workers (int): Number of worker processes to spawn.
-    """    
+    """
     def __init__(self,
                  num_workers = DEFAULT_NUM_WORKERS,
                 ):
@@ -77,7 +77,7 @@ class IParallelSolver():
                 except Exception as e:
                     print('Error stopping logs : ' + str(e))
         
-    def process_ids(self, set_ids, results_file = None):	
+    def process_ids(self, set_ids, results_file = None):
         """
         Processes a list of set IDs using the configured process function in parallel.
 

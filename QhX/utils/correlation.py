@@ -13,4 +13,4 @@ def correlation_nd(A, B):
     ssB = (B_mB**2).sum(1)
 
   
-    return (np.dot(A_mA, B_mB.T)) 
+    return (np.dot(A_mA, B_mB.T))

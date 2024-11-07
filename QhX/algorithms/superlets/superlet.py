@@ -501,7 +501,7 @@ if __name__ == "__main__":
     ax2.plot([0, len(signal) / fs], [40, 40], "--", c='0.5')
     ax2.plot([0, len(signal) / fs], [60, 60], "--", c='0.5')
     
-    ax2.set_xlabel("time (s)")    
+    ax2.set_xlabel("time (s)")
     ax2.set_ylabel("frequency (Hz)")
 
     fig.tight_layout()
