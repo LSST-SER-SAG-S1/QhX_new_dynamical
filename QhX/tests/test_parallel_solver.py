@@ -1,11 +1,13 @@
 import unittest
 import os
+import gc
 import pandas as pd
 import numpy as np
 from QhX.parallelization_solver import ParallelSolver
 from QhX import DataManagerDynamical, process1_new_dyn
 from pandas.testing import assert_frame_equal
 from io import StringIO
+import threading
 
 class TestParallelSolver(unittest.TestCase):
     def setUp(self):
@@ -110,10 +112,25 @@ class TestParallelSolver(unittest.TestCase):
 
     def tearDown(self):
         print("Cleaning up...")  # Debugging print
+        # Attempt to shut down any remaining threads if needed
+        if hasattr(self.solver, 'executor') and self.solver.executor:
+            try:
+                self.solver.executor.shutdown(wait=True)
+                print("Executor shutdown successfully.")  # Debugging print
+            except Exception as e:
+                print(f"Error during executor shutdown: {e}")
+
         if os.path.isfile(self.synthetic_data_file):
             os.remove(self.synthetic_data_file)
-        if os.path.isfile('mock-lc.csv'):
+        if os.path.isfile('mock_lc.csv'):
             os.remove('mock_lc.csv')
 
+    # Force garbage collection to help release any remaining resources
+        gc.collect()
+
+    # Debugging: Check if there are any active threads
+        for thread in threading.enumerate():
+            if thread.name != "MainThread":
+             print(f"Thread {thread.name} is still active.")  # Debugging print
 if __name__ == '__main__':
     unittest.main()
