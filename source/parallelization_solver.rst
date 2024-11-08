@@ -43,8 +43,8 @@ The following example demonstrates how to use the `ParallelSolver` class with th
     # Setup and run the parallel solver
     setids = ['0458387']
     solver_dynamical = ParallelSolver(
-        delta_seconds=12.0, num_workers=4, data_manager=data_manager_agn_dc, log_time=True, log_files=False, 
-        save_results=True, process_function=process1_new_dyn, parallel_arithmetic=True, ntau=80, ngrid=100, 
+        delta_seconds=12.0, num_workers=4, data_manager=data_manager_agn_dc, log_time=True, log_files=False,
+        save_results=True, process_function=process1_new_dyn, parallel_arithmetic=True, ntau=80, ngrid=100,
         provided_minfq=500, provided_maxfq=10, mode='dynamical'
     )
     solver_dynamical.process_ids(setids, 'results2.csv')

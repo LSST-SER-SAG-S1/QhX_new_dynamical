@@ -13,16 +13,16 @@ class TestIntegratedLightCurveProcessing(unittest.TestCase):
         # Generate mock light curve
         print("Running integrated  test on simulation of single light curve, and functionalities of modules")
         print(" for Wavelet matrix coefficients calculations and period and its significance calculation. This may take time about 500-800 seconds...")
-        
+
         period = 100  # days
         amplitude = 0.3
         tt, yy = simple_mock_lc(time_interval=10, num_points=1000, frequency=period, amplitude=amplitude, percent=0.5, magnitude=22)
         #fig_plot(tt, yy)
         # Process with hybrid2d
-      
+
         wwz_matrix, corr, extent = hybrid2d(tt, yy, 80, 800, minfq=2000,maxfq=10)
-      
-        
+
+
         # Assuming the use of a function like signif_johnson (though not explicitly found in the provided notebook cells)
         numlc1 =10  # Example Object ID
         numlc=10 #number of lc for johnson method
@@ -31,7 +31,7 @@ class TestIntegratedLightCurveProcessing(unittest.TestCase):
         # Extract periods
         # Detect periods in the correlation matrix and store results in peaks0, hh0, r_periods0, up0, low0
         peaks0, hh0, r_periods0, up0, low0 = periods(numlc1, corr, 800, plot=False, minfq=2000, maxfq=10)
-    
+
         yax = corr.flatten()  # Example correlation of oscillation patterns
         bins, bins11, sig, siger = signif_johnson(numlc,peak, idx_peaks, hh0, tt, yy, ntau=80, ngrid=800, f=2, peakHeight=0.6, minfq=2000, maxfq=10)
 

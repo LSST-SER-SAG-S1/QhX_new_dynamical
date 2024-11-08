@@ -16,7 +16,7 @@ DEFAULT_LOG_PERIOD = 10
 class Logger:
     """
     A class to manage logging an active process processing an object with an ID. Used by the parallelization_solver module.
-    
+
     Attributes:
         log_files (bool): a flag whether io redirect print output into a file
         log_time (bool): a flag whether to log time every few seconds
@@ -44,25 +44,25 @@ class Logger:
         total_time = 0
         start_time = datetime.now()
         print(f'Starting time for ID {set_id} : {start_time}\n')
-        
+
         while e.wait(delta_seconds) == False:
             # Log how much time passed so far
             total_time += delta_seconds
             print(f'Processing {set_id}\nPID {os.getpid()}\nDuration: {total_time/delta_seconds} ticks\n{delta_seconds} seconds each\nTime so far {total_time}s\n')
-        
+
         # Log finish time
         end_time = datetime.now()
         print(f'End time for ID {set_id} : {end_time}\nTotal time : {end_time - start_time}\n')
-        
+
     def start(self, set_id):
         """
         Starts a logging thread and opens a logging file, redirecting output to it.
-        
+
         Parameters:
             set_id (str): string of set/object name (ID)
         """
         self.logging_file = None
-        
+
         # Open output log file and redirect output
         if self.log_files:
             self.logging_file = open(set_id, 'w')
@@ -77,12 +77,12 @@ class Logger:
             # Start the thread and set flag
             self.started = True
             self.logging_thread.start()
-        
+
     def stop(self):
         """ Stops the logging waiting for the thread to finish. Throws if logger has not started. """
         if not self.started:
             raise Exception('Not started.')
-            
+
         # Stop background thread, close output file and write result to individual file if relevant flags are set
         if self.log_time:
             self.stopper_event.set()
@@ -91,4 +91,4 @@ class Logger:
             sys.stdout = sys.__stdout__
             self.logging_file.close()
         self.started = False
-        
+

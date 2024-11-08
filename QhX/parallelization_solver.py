@@ -76,11 +76,11 @@ class ParallelSolver(IParallelSolver):
                                        parallel=self.parallel_arithmetic,
                                        include_errors=False)
         return result
-    
+
     def maybe_begin_logging(self, set_id):
         """Starts a logging thread"""
         self.logger.start(set_id)
-    
+
     def maybe_stop_logging(self):
         """Stops the logger"""
         self.logger.stop()

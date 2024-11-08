@@ -14,10 +14,10 @@ import matplotlib.pyplot as plt
 
 def get_full_width(x: np.ndarray, y: np.ndarray, peak: np.ndarray, height: float = 0.5) -> tuple:
     """
-    Calculate the error of the determined period using the FWHM method and determine quantiles.    
-    This function calculates the error of the determined period using the Full Width at Half Maximum (FWHM) method. 
-    It is part of a post-mortem analysis to estimate the period uncertainty based on the Mean Noise Power Level (MNPL) in the vicinity of the peak. 
-    The function detects the FWHM of a peak and then calculates the points between the 25th and 75th quantile to find MNPL.    
+    Calculate the error of the determined period using the FWHM method and determine quantiles.
+    This function calculates the error of the determined period using the Full Width at Half Maximum (FWHM) method.
+    It is part of a post-mortem analysis to estimate the period uncertainty based on the Mean Noise Power Level (MNPL) in the vicinity of the peak.
+    The function detects the FWHM of a peak and then calculates the points between the 25th and 75th quantile to find MNPL.
 
     Parameters:
     -----------
@@ -29,7 +29,7 @@ def get_full_width(x: np.ndarray, y: np.ndarray, peak: np.ndarray, height: float
     Returns:
     --------
     tuple: A tuple containing six arrays of results:
-    
+
     - er1: An array of lower x-values for quantiles.
     - er3: An array of upper x-values for quantiles.
     - quantiles: An array of quantiles (25th and 75th percentile) calculated from peak data.
@@ -51,7 +51,7 @@ def get_full_width(x: np.ndarray, y: np.ndarray, peak: np.ndarray, height: float
             if (y[tmp] - height_half_max) < 0:
                 x_low = x[tmp + 1]
                 break
-        
+
         tmp = index_max
         while tmp < len(y) - 1:
             tmp += 1
@@ -83,7 +83,7 @@ def get_full_width(x: np.ndarray, y: np.ndarray, peak: np.ndarray, height: float
 
 def periods(lcID, data, ngrid, plot=False, save=False, peakHeight=0.6, prominence=0.7, minfq=None, maxfq=None, xlim=None):
     """
-    Perform period determination for the output of hybrid2d data.    
+    Perform period determination for the output of hybrid2d data.
     This function analyzes correlation data to determine periods of a light curve.
 
     Parameters:
@@ -102,7 +102,7 @@ def periods(lcID, data, ngrid, plot=False, save=False, peakHeight=0.6, prominenc
     Returns:
     --------
     A tuple containing:
-    
+
     - idx_peaks (list): Indices of detected peaks.
     - yax (numpy.ndarray): Processed data.
     - r_peaks (list): Detected periods.
@@ -189,9 +189,9 @@ def periods(lcID, data, ngrid, plot=False, save=False, peakHeight=0.6, prominenc
 
 def signif_johnson(numlc, peak, idx_peaks, yax, tt, yy, ntau, ngrid, f=2, peakHeight=0.6, minfq=None, maxfq=None, algorithm='wwz', method='linear', use_mag_errors=False, err_mag=None):
     """
-    Assess the significance of detected peaks in light curve data using the Johnson method, 
+    Assess the significance of detected peaks in light curve data using the Johnson method,
     with an option to incorporate magnitude errors into the analysis.
-    
+
     Parameters and returns are the same as described before.
     """
 
@@ -225,7 +225,7 @@ def signif_johnson(numlc, peak, idx_peaks, yax, tt, yy, ntau, ngrid, f=2, peakHe
             ntau, params, decay_constant, parallel = inp_param(ntau=ntau, ngrid=ngrid, f=2, minfq=minfq, maxfq=maxfq)
             if algorithm == 'wwz':
                 wwt_removedx = libwwz_wwt(timestamps=tt, magnitudes=y, time_divisions=ntau, freq_params=params, decay_constant=decay_constant, method='linear', parallel=parallel)
-            
+
             corr1x = correlation_nd(np.rot90(wwt_removedx[2]), np.rot90(wwt_removedx[2]))
             hhx = np.rot90(corr1x).T / corr1x.max()
             hh1x = np.rot90(hhx.T)

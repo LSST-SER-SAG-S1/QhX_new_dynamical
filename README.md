@@ -46,12 +46,12 @@ The package will be separated into a few different modules:
 - **Publications**:
   - [Kovacevic et al. 2022](https://www.mdpi.com/2227-7390/10/22/4278)
   - Kovacevic 2024 (accepted)
-  - Kovacevic et al. (in prep) 
+  - Kovacevic et al. (in prep)
 
 ### Parallelization
 - **Contributor**: Momcilo Tosic, AI guest student under the mentorship of Andjelka Kovacevic
 - **Publication**:
-  - Kovacevic, Tosic, Ilic et al. (in prep) 
+  - Kovacevic, Tosic, Ilic et al. (in prep)
 
 ### Testing
 - **Contributors**:

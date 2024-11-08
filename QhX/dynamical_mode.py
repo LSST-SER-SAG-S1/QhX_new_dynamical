@@ -1,9 +1,33 @@
-import QhX
+"""
+dynamical_mode.py
+
+This module provides classes and functions for dynamically managing and analyzing light curve data,
+including loading, grouping, processing, and detecting periods across different bands using wavelet analysis.
+
+Classes:
+--------
+- DataManagerDynamical: A class to load, group, and preprocess light curve data, with support for optional column 
+  and filter mappings.
+
+Functions:
+----------
+- get_lc_dyn: Processes and returns light curves with options to handle different filters and include errors.
+- process1_new_dyn: Analyzes light curve data from a single object to detect common periods across various bands.
+
+Dependencies:
+-------------
+- QhX.light_curve: Provides light curve processing functions (e.g., outliers_mad, outliers).
+- QhX.calculation and QhX.detection: Modules for light curve calculations and period detection.
+- QhX.algorithms.wavelets.wwtz: Performs wavelet analysis on time-series data.
+
+"""
+
+
+import logging
+from io import BytesIO
+import requests
 import pandas as pd
 import numpy as np
-import logging
-import requests
-from io import BytesIO
 from QhX.light_curve import outliers_mad,outliers
 from QhX.calculation import *
 from QhX.detection import *
@@ -61,10 +85,11 @@ class DataManagerDynamical:
              self.fs_gp = self.data_df.groupby(self.group_by_key)
              logging.info(f"Data grouped by {self.group_by_key} successfully.")
              return self.fs_gp
-         else:
-             logging.error("Data is not available for grouping.")
-             return None
 
+         # This will only execute if self.data_df is None
+         logging.error("Data is not available for grouping.")
+         return None
+     
 
 
 def get_lc_dyn(data_manager, set1, include_errors=False):
@@ -76,7 +101,7 @@ def get_lc_dyn(data_manager, set1, include_errors=False):
     max_seed_value = 2**32 - 1
     seed_value = abs(hash(int(set1))) % max_seed_value
     np.random.seed(seed_value)  # Seed with the hashed value for reproducibility
-    
+
  #   np.random.seed(int(set1))  # Seed with the object ID for reproducibility
     if set1 not in data_manager.fs_gp.groups:
         print(f"Set ID {set1} not found.")

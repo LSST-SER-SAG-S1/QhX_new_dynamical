@@ -45,7 +45,7 @@ def merge_batch_csv(all_sizes=DEFAULT_SIZES, directory=".", output_file=DEFAULT_
         print(f"All CSV files merged into '{output_file}' successfully! Counted {cnt} files.")
     else:
         print("No suitable CSV files found to merge.")
-    
+
     return cnt
 
 if __name__ == "__main__":
@@ -62,4 +62,4 @@ if __name__ == "__main__":
     if not all_sizes:
         all_sizes = DEFAULT_SIZES
     merge_batch_csv(all_sizes) # Call merge function
-    
+

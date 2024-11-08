@@ -62,7 +62,7 @@ This example demonstrates how to use the `DataManagerDynamical` class and the `p
     )
 
     # Load the dataset from the data folder of the package
-    data_manager_gaia.load_data('QhX/data/GaiaQSOcandsLCNobsGgt900.pqt')
+    data_manager_gaia.load_data('data/GaiaQSOcandsLCNobsGgt900.pqt')
 
     # Group the data by the specified key
     data_manager_gaia.group_data()

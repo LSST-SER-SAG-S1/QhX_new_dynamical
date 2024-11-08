@@ -36,7 +36,7 @@ class TestParallelSolver(unittest.TestCase):
         self.synthetic_data = self.create_synthetic_data()
         self.synthetic_data_file = 'synthetic_test_data.parquet'
         self.synthetic_data.to_parquet(self.synthetic_data_file)
-        
+
         # Load and group the synthetic data
         print("Loading synthetic data...")  # Debugging print
         self.data_manager.load_data(self.synthetic_data_file)

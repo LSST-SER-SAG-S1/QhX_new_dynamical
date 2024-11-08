@@ -11,7 +11,7 @@ def flatten_detected_periods(detected_periods):
     for record in detected_periods:
         # Ensure all expected keys are present
         complete_record = {key: record.get(key, np.nan) for key in ['ID', 'Sampling_1', 'Sampling_2', 'Common period (Band1 & Band1)', 'Upper error bound', 'Lower error bound', 'Significance', 'Band1-Band2']}
-        
+
         # Check if any value in the complete_record is NaN
         if all(value == value for value in complete_record.values()):  # NaN does not equal itself
             flat_list.append(complete_record)
@@ -68,7 +68,7 @@ def classify_periods(detected_periods):
 
     # Optionally, remove 'Band1-Band2' column if no longer needed
     df.drop(columns=['Band1-Band2'], inplace=True)
-    
+
     rows_list = []
     for name in df['ID'].unique():
         quasar_data = df[df['ID'] == name]
@@ -118,11 +118,11 @@ def classify_period(row):
     """
     if pd.isna(row['m3']) or pd.isna(row['m4']) or pd.isna(row['m5']) or pd.isna(row['m6']) or pd.isna(row['iou']) or row['m3'] == 0:
         return 'NAN'
-    
+
     rel_error_lower = abs(row['m4']) / row['m3'] if row['m4'] >= 0 else float('inf')
     rel_error_upper = abs(row['m5']) / row['m3'] if row['m5'] >= 0 else float('inf')
     consistent_period = row['period_diff'] < 0.1
-    
+
     if row['m6'] >= 0.99 and rel_error_lower <= 0.1 and rel_error_upper <= 0.1 and row['iou'] >= 0.99 and consistent_period:
         return 'reliable'
     elif 0.5 <= row['m6'] < 0.99 and 0.1 < rel_error_lower <= 0.3 and 0.1 < rel_error_upper <= 0.3 and 0.8 <= row['iou'] < 0.99 and consistent_period:
@@ -150,14 +150,14 @@ def aggregate_classifications(group):
     """
     if 'individual_classification' not in group.columns:
         group['individual_classification'] = group.apply(classify_period, axis=1)
-    
+
     if group['individual_classification'].nunique() == 1:
         group['final_classification'] = group['individual_classification'].iloc[0]
     elif 'reliable' in group['individual_classification'].values:
         group['final_classification'] = 'inconsistent but some reliable'
     else:
         group['final_classification'] = 'inconsistent and poor'
-    
+
     return group
 
 def group_periods(data):
@@ -217,7 +217,7 @@ def aggregate_statistics(classified_data):
     """
     # Filter data for relevant classifications
     filtered_data = classified_data[classified_data['final_classification'].isin(['reliable', 'medium reliable'])]
-    
+
     # Calculate additional statistics
     stats = filtered_data.groupby(['ID', 'final_classification']).agg(
         mean_period=('m3', 'mean'),
@@ -226,7 +226,7 @@ def aggregate_statistics(classified_data):
         mean_significance=('m6', 'mean'),
         mean_iou=('iou', 'mean')
     ).reset_index()
-    
+
     return stats
 
 def save_to_csv(data, file_path):
@@ -270,7 +270,7 @@ def process_large_dataset(file_path, chunksize=10000):
     # Combine processed chunks and classify aggregated data
     combined_data = pd.concat(aggregated_chunks, ignore_index=True)
     aggregated_stats = aggregate_statistics(combined_data)
-    
+
     return combined_data, aggregated_stats
 
 if __name__ == "__main__":
@@ -278,17 +278,17 @@ if __name__ == "__main__":
     """
     Usage
     file_path = 'path/to/your/individual_classified_dataset.csv'
-    
+
     Process the dataset and obtain aggregated statistics
     combined_data, aggregated_stats = process_large_dataset(file_path)
-    
+
     Optionally, save the combined classified data and aggregated statistics to CSV files
     combined_data_path = 'path/to/your/combined_classified_data.csv'
     aggregated_stats_path = 'path/to/your/aggregated_statistics.csv'
-    
+
     save_to_csv(combined_data, combined_data_path)
     save_to_csv(aggregated_stats, aggregated_stats_path)
-    
+
     print(f"Combined classified data saved to {combined_data_path}")
     print(f"Aggregated statistics saved to {aggregated_stats_path}")
     """

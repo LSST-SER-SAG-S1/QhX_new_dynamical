@@ -39,7 +39,7 @@ def process1tiktok(data_manager,set1, initial_period, damping_factor_amplitude, 
             det_periods.append([int(set1), sampling0, sampling1, r_periods01[j], u01[j], low01[j], sig01[j], 12])
     elif r_periods01.size == 0:
         det_periods.append([int(set1), 0, 0, 0, 0, 0, 0, 12])
-   
+
     r_periods02, u02, low02, sig02 = same_periods(r_periods0, r_periods2, up0, low0, up2, low2, peaks0, hh0, tt0, yy0, peaks2, hh2, tt2, yy2, ntau=ntau, ngrid=ngrid, minfq=minfq, maxfq=maxfq)
     if r_periods02.size > 0 and u02.size > 0 and low02.size > 0 and sig02.size > 0:
         for j in range(len(r_periods02.ravel())):
@@ -81,7 +81,7 @@ def process1_new(data_manager, set1, ntau=None, ngrid=None, provided_minfq=None,
     Returns
     -------
     A list of dictionaries representing the results of the analysis performed on light curve data. Each dictionary contains:
-    
+
         - objectid (int): Identifier of the object ID.
         - sampling_i (float): Mean sampling rate in the first band of the pair where a common period is detected.
         - sampling_j (float): Mean sampling rate in the second band in the pair.
@@ -180,7 +180,7 @@ def process1(data_manager, set1, ntau=None, ngrid=None, provided_minfq=None, pro
     Notes
     -----
     The function involves several steps:
-    
+
     - Verifying the existence of the dataset.
     - Retrieving and processing light curve data from different bands.
     - Applying hybrid wavelet techniques to each band's data.
@@ -243,7 +243,7 @@ def process1(data_manager, set1, ntau=None, ngrid=None, provided_minfq=None, pro
 
 def same_periods(r_periods0, r_periods1, up0, low0, up1, low1, peaks0, hh0, tt0, yy0, peaks1, hh1, tt1, yy1, ntau, ngrid, minfq, maxfq):
     """
-    Analyzes and identifies common periods between two sets of light curve data, 
+    Analyzes and identifies common periods between two sets of light curve data,
     assessing their consistency and statistical significance based on a relative tolerance.
     """
 

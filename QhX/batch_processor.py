@@ -23,14 +23,14 @@ def process_batches(batch_size, num_workers=25, start_i=0):
         batch_size (int): The number of data points to process in each batch.
         num_workers (int, optional): The number of parallel workers to use for processing. Defaults to 25.
         start_i (int, optional): The index from which to start processing the dataset. Defaults to 0.
-    
-    This function loads a dataset, groups the data as necessary, and then processes it in batches. 
+
+    This function loads a dataset, groups the data as necessary, and then processes it in batches.
     Each batch is processed in a new directory to keep the results organized.
     """
 
     # Initial logging to indicate batch processing start
     print(f'Starting testing in batches of size {batch_size}')
-    
+
     # Load and prepare the dataset using DataManager
     data_manager = DataManager()
     fs_df = data_manager.load_fs_df('ForcedSourceTable.parquet')  # Load the dataset
@@ -48,7 +48,7 @@ def process_batches(batch_size, num_workers=25, start_i=0):
     solver = ParallelSolver(data_manager=data_manager, delta_seconds=15.0, num_workers=num_workers, log_files=True,
                             provided_minfq=500, provided_maxfq=10, ngrid=100, ntau=80)
     print(f'Tried num of workers {num_workers}')
-    
+
     # Process each batch
     for i in range(start_i, len(setids), batch_size):
         try:

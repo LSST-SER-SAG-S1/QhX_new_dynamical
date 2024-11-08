@@ -3,7 +3,7 @@ import colorednoise as cn
 
 
 def artificial_lc_sampled(mjd, t, y):
-    """ 
+    """
     Returns a hypothetical light curve sampled in a given OpSim strategy.
     User needs to provide a reference light curve for sampling (usually a continuous
     light curve with 1-day cadence, see LC_conti() function).
@@ -23,7 +23,7 @@ def artificial_lc_sampled(mjd, t, y):
     top: np.array
         Days during the survey when we had an observation (sampling) in a given OpSim strategy.
     yop: np.array
-        Light curve magnitude taken from the reference light curve on days we had an observation 
+        Light curve magnitude taken from the reference light curve on days we had an observation
         (sampling) in a given OpSim strategy.
     """
     # Convert MJD to survey days
@@ -51,14 +51,14 @@ def artificial_lc_sampled(mjd, t, y):
 def artificial_stochastic_mock_lc(
     T, deltatc=1, oscillations=True, A=0.14, noise=0.00005, z=0, frame='observed'
 ):
-    """ 
+    """
     Generate one artificial light curve using a stochastic model based on the Damped random walk (DRW) process.
 
     Parameters:
     -----------
     T: int
-        Total time span of the light curve. It is recommended to generate light curves to be at least 
-        10 times longer than their characteristic timescale (Kozłowski 2017). 
+        Total time span of the light curve. It is recommended to generate light curves to be at least
+        10 times longer than their characteristic timescale (Kozłowski 2017).
     deltatc: int, default=1
         Cadence (or sampling rate) - time interval between two consecutive samplings of the light curve in days.
     oscillations: bool, default=True
