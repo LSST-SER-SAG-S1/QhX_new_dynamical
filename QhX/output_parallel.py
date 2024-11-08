@@ -1,72 +1,128 @@
+"""
+This module processes datasets of detected periods for quasars, performing
+classification based on intersection over union (IoU) calculations and various
+error metrics. It provides functionality for loading, classifying, and aggregating
+information on detected periods in large datasets that may not fit entirely in memory.
+
+The key functionalities in this module include:
+- Flattening nested data structures and filtering out entries with missing values.
+- Calculating the intersection over union (IoU) for overlapping circles, representing period uncertainties.
+- Classifying individual periods based on IoU, error bounds, and significance metrics.
+- Aggregating classifications to provide a summary classification for each unique object ID.
+- Processing large datasets in chunks to handle memory limitations, with chunk-wise classifications.
+- Saving processed data and aggregated statistics to CSV files.
+
+This module is designed for high-throughput time-domain astronomical data analysis,
+specifically to help identify and classify variability patterns in quasar light curves.
+It can be used as a standalone script or imported into larger workflows.
+
+Example Usage:
+--------------
+    file_path = 'path/to/your/individual_classified_dataset.csv'
+    combined_data, aggregated_stats = process_large_dataset(file_path)
+    
+    combined_data_path = 'path/to/your/combined_classified_data.csv'
+    aggregated_stats_path = 'path/to/your/aggregated_statistics.csv'
+
+    save_to_csv(combined_data, combined_data_path)
+    save_to_csv(aggregated_stats, aggregated_stats_path)
+
+    print(f"Combined classified data saved to {combined_data_path}")
+    print(f"Aggregated statistics saved to {aggregated_stats_path}")
+
+Functions:
+----------
+- flatten_detected_periods(detected_periods): Flatten nested data and skip records with NaN values.
+- calculate_iou(radius1, radius2, distance): Calculate IoU for two circles.
+- classify_periods(detected_periods): Classify periods based on IoU and error metrics.
+- classify_period(row): Classify an individual period based on predefined thresholds.
+- aggregate_classifications(group): Aggregate classifications to summarize period reliability for each object.
+- group_periods(data): Apply classification and aggregation to all detected periods in the dataset.
+- process_chunk(chunk): Process a chunk of data, handling chunk-wise classification.
+- aggregate_statistics(classified_data): Aggregate statistics for reliable and medium-reliable classifications.
+- save_to_csv(data, file_path): Save a DataFrame to a CSV file.
+- process_large_dataset(file_path, chunksize=10000): Process large datasets by reading in chunks, classifying, and aggregating.
+"""
+import math
 import pandas as pd
 import numpy as np
-import math
-
-
 
 
 def flatten_detected_periods(detected_periods):
-    """Flatten the nested list of dictionaries of detected periods, skipping records with any NaN values."""
+    """
+    Flatten the nested list of dictionaries of detected periods, skipping records with any NaN values.
+    
+    Parameters:
+    -----------
+    detected_periods : list of dict
+        A list of dictionaries, each representing a detected period with keys such as 'ID', 'Sampling_1', etc.
+    
+    Returns:
+    --------
+    list of dict
+        A flattened list of dictionaries, excluding records with NaN values.
+    """
     flat_list = []
     for record in detected_periods:
-        # Ensure all expected keys are present
-        complete_record = {key: record.get(key, np.nan) for key in ['ID', 'Sampling_1', 'Sampling_2', 'Common period (Band1 & Band1)', 'Upper error bound', 'Lower error bound', 'Significance', 'Band1-Band2']}
-
-        # Check if any value in the complete_record is NaN
+        complete_record = {key: record.get(key, np.nan) for key in [
+            'ID', 'Sampling_1', 'Sampling_2', 'Common period (Band1 & Band1)',
+            'Upper error bound', 'Lower error bound', 'Significance', 'Band1-Band2']}
+        
         if all(value == value for value in complete_record.values()):  # NaN does not equal itself
             flat_list.append(complete_record)
-        # If any value is NaN, this record will be skipped
     return flat_list
 
 def calculate_iou(radius1, radius2, distance):
-        """
-        Calculates the Intersection over Union (IoU) for two circles given their radii and the distance between their centers.
+    """
+    Calculates the Intersection over Union (IoU) for two circles given their radii and the distance between their centers.
 
-        Parameters:
-        -----------
-        radius1 (float): Radius of the first circle.
-        radius2 (float): Radius of the second circle.
-        distance (float): Distance between the centers of the two circles.
+    Parameters:
+    -----------
+    radius1 (float): Radius of the first circle.
+    radius2 (float): Radius of the second circle.
+    distance (float): Distance between the centers of the two circles.
 
-        Returns:
-        --------
-        float: IoU value.
-        """
-        if distance > (radius1 + radius2):
-            return 0
-        elif distance <= abs(radius1 - radius2):
-            return 1
-        else:
-            area1 = math.pi * radius1**2
-            area2 = math.pi * radius2**2
-            d = distance
+    Returns:
+    --------
+    float: IoU value.
+    """
+    if distance > (radius1 + radius2):
+        return 0
+    elif distance <= abs(radius1 - radius2):
+        return 1
+    else:
+        area1 = math.pi * radius1**2
+        area2 = math.pi * radius2**2
+        d = distance
 
-            # Calculate intersection area
-            part1 = math.acos((radius1**2 + d**2 - radius2**2) / (2 * radius1 * d))
-            part2 = math.acos((radius2**2 + d**2 - radius1**2) / (2 * radius2 * d))
-            intersection = part1 * radius1**2 + part2 * radius2**2 - 0.5 * (radius1**2 * math.sin(2 * part1) + radius2**2 * math.sin(2 * part2))
-
-            union = area1 + area2 - intersection
-            return intersection / union
-
-    # Initialize list to hold DataFrame rows
-
+        part1 = math.acos((radius1**2 + d**2 - radius2**2) / (2 * radius1 * d))
+        part2 = math.acos((radius2**2 + d**2 - radius1**2) / (2 * radius2 * d))
+        intersection = (part1 * radius1**2 + part2 * radius2**2 - 
+                        0.5 * (radius1**2 * math.sin(2 * part1) + radius2**2 * math.sin(2 * part2)))
+        
+        union = area1 + area2 - intersection
+        return intersection / union
 
 def classify_periods(detected_periods):
     """
     Classifies periods based on IoU and other metrics, adjusted to work with specified column names.
     Assumes 'Band1' and 'Band2' columns are already present in the DataFrame.
+    
+    Parameters:
+    -----------
+    detected_periods : list of dict
+        A list of dictionaries representing detected periods.
+    
+    Returns:
+    --------
+    pd.DataFrame
+        A DataFrame containing classified periods and their relevant metrics.
     """
-    # Flatten the list of dictionaries
     flat_list = flatten_detected_periods(detected_periods)
-
-    # Convert flattened list to DataFrame
     df = pd.DataFrame(flat_list)
-    # Check if 'Band1' and 'Band2' columns do not exist before attempting to split 'Band1-Band2'
     if 'Band1' not in df.columns or 'Band2' not in df.columns:
         df[['Band1', 'Band2']] = df['Band1-Band2'].str.split('-', expand=True)
-
-    # Optionally, remove 'Band1-Band2' column if no longer needed
+    
     df.drop(columns=['Band1-Band2'], inplace=True)
 
     rows_list = []
@@ -77,9 +133,8 @@ def classify_periods(detected_periods):
                 row_i = quasar_data.iloc[i]
                 row_j = quasar_data.iloc[j]
                 iou, period_diff = np.nan, np.nan
-                # Check if necessary values are not NaN before calculating IoU and period difference
                 if not pd.isna(row_i['Common period (Band1 & Band1)']) and not pd.isna(row_j['Common period (Band1 & Band1)']) and not pd.isna(row_i['Upper error bound']) and not pd.isna(row_i['Lower error bound']) and not pd.isna(row_j['Upper error bound']) and not pd.isna(row_j['Lower error bound']):
-                    period_diff = abs(row_i['Common period (Band1 & Band1)'] - row_j['Common period (Band1 & Band1)']) / max(row_i['Common period (Band1 & Band1)'], 1e-7)  # Avoid division by zero
+                    period_diff = abs(row_i['Common period (Band1 & Band1)'] - row_j['Common period (Band1 & Band1)']) / max(row_i['Common period (Band1 & Band1)'], 1e-7)
                     if period_diff <= 0.1:
                         radius_i = (row_i['Upper error bound'] + row_i['Lower error bound']) / 2
                         radius_j = (row_j['Upper error bound'] + row_j['Lower error bound']) / 2
@@ -88,7 +143,7 @@ def classify_periods(detected_periods):
 
                 rows_list.append({
                     'ID': name,
-                    'm3': row_i['Common period (Band1 & Band1)'],  # Adjusted to use 'Common period (Band1 & Band1)' directly
+                    'm3': row_i['Common period (Band1 & Band1)'],
                     'm4': row_i['Lower error bound'],
                     'm5': row_i['Upper error bound'],
                     'm6': row_i['Significance'],
@@ -98,7 +153,6 @@ def classify_periods(detected_periods):
                     'iou': iou
                 })
 
-    # Convert the list of processed rows into a DataFrame
     output_df = pd.DataFrame(rows_list)
     return output_df
 
@@ -106,7 +160,7 @@ def classify_period(row):
     """
     Classify the detected period as 'reliable', 'medium reliable', 'poor', or 'NAN'
     based on the significance of the detected period, the relative lower and upper errors,
-    and the IoU of the error circles provided in function classify_periods.
+    and the IoU of the error circles.
 
     Parameters:
     -----------
@@ -132,15 +186,12 @@ def classify_period(row):
 
 def aggregate_classifications(group):
     """
-    Aggregates individual period classifications within a group, determining a final
-    classification for each unique object ID based on the individual classifications
-    of its periods.
+    Aggregates individual period classifications within a group, determining a final classification for each unique object ID.
 
     Parameters:
     -----------
     group : pd.DataFrame
-        A subset of the original DataFrame grouped by object ID, containing all period
-        detections and their individual classifications for that ID.
+        A subset of the original DataFrame grouped by object ID, containing all period detections.
 
     Returns:
     --------
@@ -162,35 +213,29 @@ def aggregate_classifications(group):
 
 def group_periods(data):
     """
-    The process of classifying periods for all detected periods in a dataset.
-    It applies individual classifications and then aggregates these classifications for each
-    object ID.
+    Classifies periods for all detected periods in a dataset and aggregates classifications for each object ID.
 
     Parameters:
     -----------
     data : pd.DataFrame
-        The dataset containing detected periods along with necessary metrics (significance,
-        relative errors, IoU) for classification.
+        The dataset containing detected periods and necessary metrics.
 
     Returns:
     --------
     pd.DataFrame
-        The input DataFrame enhanced with an 'individual_classification' column for each period
-        and a 'final_classification' for each object ID.
+        The input DataFrame enhanced with 'individual_classification' and 'final_classification' columns.
     """
     grouped = data.groupby('ID', as_index=False).apply(aggregate_classifications).reset_index(drop=True)
     return grouped
 
 def process_chunk(chunk):
     """
-    Processes a chunk of the dataset by applying period classification logic. This function
-    is intended for use in a chunk-wise processing of large datasets that do not fit into
-    memory entirely.
+    Processes a chunk of the dataset by applying period classification logic, used for chunk-wise processing.
 
     Parameters:
     -----------
     chunk : pd.DataFrame
-        A chunk of the original large dataset, containing a subset of the detected periods.
+        A chunk of the dataset, containing a subset of the detected periods.
 
     Returns:
     --------
@@ -201,24 +246,19 @@ def process_chunk(chunk):
 
 def aggregate_statistics(classified_data):
     """
-    Aggregates statistics for object IDs classified as 'reliable' or 'medium reliable', calculating
-    mean values for period, relative errors, significance, and IoU.
+    Aggregates statistics for object IDs classified as 'reliable' or 'medium reliable'.
 
     Parameters:
     -----------
     classified_data : pd.DataFrame
-        The dataset with 'final_classification' determined for each object ID.
+        The dataset with 'final_classification' for each object ID.
 
     Returns:
     --------
     pd.DataFrame
-        A DataFrame containing aggregated statistics for each 'reliable' and 'medium reliable'
-        classified object ID.
+        A DataFrame containing aggregated statistics for each 'reliable' and 'medium reliable' classified object ID.
     """
-    # Filter data for relevant classifications
     filtered_data = classified_data[classified_data['final_classification'].isin(['reliable', 'medium reliable'])]
-
-    # Calculate additional statistics
     stats = filtered_data.groupby(['ID', 'final_classification']).agg(
         mean_period=('m3', 'mean'),
         mean_lower_error=('m4', 'mean'),
@@ -231,7 +271,7 @@ def aggregate_statistics(classified_data):
 
 def save_to_csv(data, file_path):
     """
-    Saves the provided DataFrame to a CSV file at the specified file path.
+    Saves the provided DataFrame to a CSV file.
 
     Parameters:
     -----------
@@ -244,51 +284,40 @@ def save_to_csv(data, file_path):
 
 def process_large_dataset(file_path, chunksize=10000):
     """
-    Processes a large dataset by reading it in chunks, classifying periods, and then
-    aggregating results both within and across chunks. This approach allows for handling
-    datasets too large to fit into memory.
+    Processes a large dataset by reading it in chunks, classifying periods, and then aggregating results.
 
     Parameters:
     -----------
     file_path : str
-        The path to the large dataset file.
+        The path to the dataset file.
     chunksize : int, optional
-        The number of rows per chunk to use when reading the dataset.
+        The number of rows per chunk.
 
     Returns:
     --------
     tuple of (pd.DataFrame, pd.DataFrame)
-        A tuple containing two DataFrames: the first with combined classified data from all
-        chunks, and the second with aggregated statistics for 'reliable' and 'medium reliable'
-        object IDs.
+        Two DataFrames: one with classified data and one with aggregated statistics.
     """
     aggregated_chunks = []
     for chunk in pd.read_csv(file_path, chunksize=chunksize):
         processed_chunk = process_chunk(chunk)
         aggregated_chunks.append(processed_chunk)
 
-    # Combine processed chunks and classify aggregated data
     combined_data = pd.concat(aggregated_chunks, ignore_index=True)
     aggregated_stats = aggregate_statistics(combined_data)
 
     return combined_data, aggregated_stats
 
 if __name__ == "__main__":
-    # Demonstration of module functionality using a specified file path for a large dataset of INDIVIDUALLY CLASSIFIED periods.
     """
-    Usage
+    Example usage:
+    
     file_path = 'path/to/your/individual_classified_dataset.csv'
-
-    Process the dataset and obtain aggregated statistics
     combined_data, aggregated_stats = process_large_dataset(file_path)
-
-    Optionally, save the combined classified data and aggregated statistics to CSV files
+    
     combined_data_path = 'path/to/your/combined_classified_data.csv'
     aggregated_stats_path = 'path/to/your/aggregated_statistics.csv'
 
     save_to_csv(combined_data, combined_data_path)
     save_to_csv(aggregated_stats, aggregated_stats_path)
-
-    print(f"Combined classified data saved to {combined_data_path}")
-    print(f"Aggregated statistics saved to {aggregated_stats_path}")
     """
