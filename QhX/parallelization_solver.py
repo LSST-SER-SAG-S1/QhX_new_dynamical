@@ -1,7 +1,6 @@
 import sys
 import time
-from multiprocessing import Process
-from multiprocessing import Queue
+from multiprocessing import Process, Queue
 from QhX.detection import process1_new  # Fixed mode
 from QhX.dynamical_mode import process1_new_dyn  # Dynamical mode
 from QhX.iparallelization_solver import IParallelSolver
@@ -38,6 +37,7 @@ class ParallelSolver(IParallelSolver):
                 ):
         """Initialize the ParallelSolver with the specified configuration."""
         super().__init__(num_workers)
+        print(f"Initializing ParallelSolver with mode '{mode}' and {num_workers} workers.")
         self.delta_seconds = delta_seconds
         self.data_manager = data_manager
         self.save_results = save_results
@@ -52,53 +52,84 @@ class ParallelSolver(IParallelSolver):
         # Determine the processing function based on the mode
         if self.mode == 'fixed':
             self.process_function = process1_new  # Use the fixed mode function
+            print("Using fixed mode processing function.")
         elif self.mode == 'dynamical':
             self.process_function = process1_new_dyn  # Use the dynamical mode function
+            print("Using dynamical mode processing function.")
         else:
             raise ValueError(f"Unknown mode: {self.mode}")
 
     def aggregate_process_function_result(self, result):
         """Places the result dict into a string"""
         res = ""
+        print("Aggregating results...")
         for row in result:
             row_values = row.values() if isinstance(row, dict) else row
             res += ','.join([str(v) for v in row_values]) + "\n"
+        print("Aggregation complete.")
         return res
 
     def get_process_function_result(self, set_id):
-        """Run the detection function and return the result"""
-        result = self.process_function(self.data_manager,
-                                       set_id,
-                                       ntau=self.ntau,
-                                       ngrid=self.ngrid,
-                                       provided_minfq=self.provided_minfq,
-                                       provided_maxfq=self.provided_maxfq,
-                                       parallel=self.parallel_arithmetic,
-                                       include_errors=False)
+        """Run the detection function and return the result based on the mode"""
+        print(f"Processing set ID: {set_id} in mode '{self.mode}'.")
+
+        if self.mode == 'fixed':
+            # Call the fixed mode function
+            result = self.process_function(self.data_manager,
+                                           set_id,
+                                           ntau=self.ntau,
+                                           ngrid=self.ngrid,
+                                           provided_minfq=self.provided_minfq,
+                                           provided_maxfq=self.provided_maxfq,
+                                           parallel=self.parallel_arithmetic,
+                                           include_errors=False)
+        elif self.mode == 'dynamical':
+            # Call the dynamical mode function with parameters specific to dynamical mode
+            result = self.process_function(self.data_manager,
+                                           set_id,
+                                           ntau=self.ntau,
+                                           ngrid=self.ngrid,
+                                           provided_minfq=self.provided_minfq,
+                                           provided_maxfq=self.provided_maxfq,
+                                           parallel=self.parallel_arithmetic,
+                                           include_errors=True)  # Or other mode-specific parameters
+        else:
+            raise ValueError(f"Unknown mode: {self.mode}")
+
+        print(f"Processing for set ID {set_id} in mode '{self.mode}' completed.")
         return result
 
     def maybe_begin_logging(self, set_id):
         """Starts a logging thread"""
+        print(f"Starting logging for set ID {set_id}")
         self.logger.start(set_id)
 
     def maybe_stop_logging(self):
         """Stops the logger"""
+        print("Stopping logger.")
         self.logger.stop()
 
     def maybe_save_local_results(self, set_id, res_string):
         """Saves local results of set ID formed into a string"""
         if self.save_results:
-            with open(f'{set_id}-result.csv', 'w') as saving_file:
-                saving_file.write(HEADER + res_string)
+            print(f"Saving local results for set ID {set_id}")
+            try:
+                with open(f'{set_id}-result.csv', 'w') as saving_file:
+                    saving_file.write(HEADER + res_string)
+                print(f"Results saved successfully for set ID {set_id}.")
+            except Exception as e:
+                print(f"Error saving results for set ID {set_id}: {e}")
 
     def maybe_save_results(self, results_file):
         """If results file is set, saves the full results queue to it."""
         if results_file is not None:
+            print(f"Saving all results to {results_file}.")
             try:
                 with open(results_file, 'w') as f:
                     f.write(HEADER)
                     while not self.results_.empty():
                         result = self.results_.get()
                         f.write(result)
+                print("All results saved successfully.")
             except Exception as e:
-                print('Error while saving:', e)
+                print(f"Error while saving to {results_file}: {e}")
