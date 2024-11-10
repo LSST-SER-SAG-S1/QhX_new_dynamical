@@ -200,7 +200,7 @@ def process1(data_manager, set1, ntau=None, ngrid=None, provided_minfq=None, pro
     tt0, yy0, tt1, yy1, tt2, yy2, tt3, yy3, sampling0, sampling1, sampling2, sampling3 = light_curves_data
     det_periods = []
 
- #   # TODO CHECK THIS FUNCTION AS IT IS NOT USED YETFunction to get or calculate minfq and maxfq
+ #   Function to get or calculate minfq and maxfq
  #   def get_or_estimate_freq(tt, known_minfq, known_maxfq):
  #       if known_minfq is None or known_maxfq is None:
  #           _, fmin, fmax = estimate_wavelet_periods(tt, ngrid)

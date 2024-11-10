@@ -9,11 +9,10 @@ Example usage as a script:
     $ python batch_processor.py 100 25 0
     This command will process the dataset in batches of 100, using 25 parallel workers, starting from index 0.
 """
-
-from QhX.parallelization_solver import ParallelSolver  # Import the ParallelSolver class
-from QhX.data_manager import DataManager  # Import the DataManager class for handling datasets
 import sys  # System-specific parameters and functions
 import os  # Miscellaneous operating system interfaces
+from QhX.parallelization_solver import ParallelSolver  # Import the ParallelSolver class
+from QhX.data_manager import DataManager  # Import the DataManager class for handling datasets
 
 def process_batches(batch_size, num_workers=25, start_i=0):
     """

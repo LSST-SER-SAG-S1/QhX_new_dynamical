@@ -1,4 +1,5 @@
 # QhX: Quasar harmonics eXplorer
+[![Python CI Workflow](https://github.com/lionandjelka/QhX_new_dynamical/actions/workflows/CI-pylint.yml/badge.svg)](https://github.com/lionandjelka/QhX_new_dynamical/actions/workflows/CI-pylint.yml)
 
 Framework for 2D Hybrid Method.
 

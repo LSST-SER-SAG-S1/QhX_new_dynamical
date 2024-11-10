@@ -1,8 +1,8 @@
 # pylint: disable=R0801
-from QhX.data_manager import DataManager
 import numpy as np
 import pandas as pd
 from scipy.interpolate import interp1d
+from QhX.data_manager import DataManager
 
 
 def outliers(time, flux, err_flux=None):

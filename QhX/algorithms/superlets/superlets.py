@@ -1,8 +1,8 @@
 # Superlet package included in this package
 # Reference: Implementation by Gregor Mönke: github.com/tensionhead
 import numpy as np
-from .superlet import superlet, scale_from_period
 from QhX.utils.correlation import correlation_nd
+from .superlet import superlet, scale_from_period
 
 def superlets_methods(tt, mag, ntau, minfq=10, maxfq=500):
     """
