@@ -1,3 +1,4 @@
+# pylint: disable=R0801
 """
 This module processes datasets of detected periods for quasars, performing
 classification based on intersection over union (IoU) calculations and various

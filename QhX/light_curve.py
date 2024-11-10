@@ -1,4 +1,4 @@
-
+# pylint: disable=R0801
 from QhX.data_manager import DataManager
 import numpy as np
 import pandas as pd
