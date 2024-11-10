@@ -1,3 +1,4 @@
+# pylint: disable=R0801
 """
 This module provides functionality to merge CSV files named 'result.csv' found in directories 
 with specific batch sizes (e.g., folders ending in 'sz100', 'sz200'). The merged result is saved 

@@ -1,3 +1,4 @@
+# pylint: disable=R0801
 # File: QhX/merge_csv_results.py
 
 import os
