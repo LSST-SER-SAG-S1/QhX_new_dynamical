@@ -62,6 +62,14 @@
 <li class="toctree-l3"><a class="reference internal" href="Example1.html">SIMPLE TUTORIAL WITH MOCK LIGHT CURVE</a></li>
 <li class="toctree-l3"><a class="reference internal" href="Example2.html">Educative example of parallel processing using threading on local computer, QSO from LSST AGN Data Challenge database</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Example of using Parallelization module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Solver-Modes:-Fixed-and-Dynamical">Solver Modes: Fixed and Dynamical</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Fixed-Mode-Setup">Fixed Mode Setup</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#Instructions">Instructions</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#Dynamical-Mode-Setup">Dynamical Mode Setup</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="Example4.html">MERGER OF LARGE FILES</a></li>
 <li class="toctree-l3"><a class="reference internal" href="Example5.html">Example of visualisation of large files obtained from HPC</a></li>
 </ul>
@@ -2255,6 +2263,21 @@ INFO:root:Forced source data loaded successfully.
 INFO:root:Forced source data grouped successfully.
 </pre></div></div>
 </div>
+</section>
+<section id="Solver-Modes:-Fixed-and-Dynamical">
+<h1>Solver Modes: Fixed and Dynamical<a class="headerlink" href="#Solver-Modes:-Fixed-and-Dynamical" title="Link to this heading"></a></h1>
+<p>This notebook demonstrates how to set up and use the solver in either <strong>Fixed</strong> or <strong>Dynamical</strong> mode.</p>
+<p>The solver can be configured to process data in two modes: - <strong>Fixed Mode</strong>: For data with predefined filters and static sampling rates. - <strong>Dynamical Mode</strong>: For data with variable filters and time-dependent configurations. <strong>Note</strong>: Please ensure that the correct imports and initializations are used for each mode, as described in the sections below.</p>
+<section id="Fixed-Mode-Setup">
+<h2>Fixed Mode Setup<a class="headerlink" href="#Fixed-Mode-Setup" title="Link to this heading"></a></h2>
+<p>In <em>Fixed Mode</em>, you can use the default <code class="docutils literal notranslate"><span class="pre">DataManager</span></code> class to manage the data. This mode does not require additional configuration for time-dependent filters.</p>
+<section id="Instructions">
+<h3>Instructions<a class="headerlink" href="#Instructions" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Import the <code class="docutils literal notranslate"><span class="pre">DataManager</span></code> class from the <code class="docutils literal notranslate"><span class="pre">QhX.data_manager</span></code> module.</p></li>
+<li><p>Initialize the <code class="docutils literal notranslate"><span class="pre">DataManager</span></code> as shown in the example below.</p></li>
+</ol>
+<p>Run the code cell below to set up <em>Fixed Mode</em>.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
@@ -2263,7 +2286,7 @@ INFO:root:Forced source data grouped successfully.
 <span class="n">setids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;1384177&#39;</span><span class="p">,</span> <span class="s1">&#39;0458387&#39;</span><span class="p">]</span>
 
 <span class="c1"># Create instance of parallel solver without parallel arithmetic and passing ngrid and provided fq values (ntau=80 by default)</span>
-<span class="n">solver</span> <span class="o">=</span> <span class="n">ParallelSolver</span><span class="p">(</span><span class="n">data_manager</span><span class="o">=</span><span class="n">data_manager</span><span class="p">,</span> <span class="n">delta_seconds</span><span class="o">=</span><span class="mf">12.0</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">log_files</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parallel_arithmetic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ngrid</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">provided_minfq</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span> <span class="n">provided_maxfq</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">solver</span> <span class="o">=</span> <span class="n">ParallelSolver</span><span class="p">(</span><span class="n">data_manager</span><span class="o">=</span><span class="n">data_manager</span><span class="p">,</span> <span class="n">delta_seconds</span><span class="o">=</span><span class="mf">12.0</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">log_files</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parallel_arithmetic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ntau</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span><span class="n">ngrid</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">provided_minfq</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span> <span class="n">provided_maxfq</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;fixed&#39;</span><span class="p">)</span>
 
 <span class="c1"># Run the solver &amp; store results into results.csv</span>
 <span class="n">solver</span><span class="o">.</span><span class="n">process_ids</span><span class="p">(</span><span class="n">setids</span><span class="p">,</span> <span class="s1">&#39;results.csv&#39;</span><span class="p">)</span>
@@ -2278,7 +2301,7 @@ INFO:root:Forced source data grouped successfully.
 <span class="n">setids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;0458387&#39;</span><span class="p">]</span>
 
 <span class="c1"># Create instance of parallel solver with parallel arithmetic and provide parameters</span>
-<span class="n">solver</span> <span class="o">=</span> <span class="n">ParallelSolver</span><span class="p">(</span><span class="n">data_manager</span><span class="o">=</span><span class="n">data_manager</span><span class="p">,</span> <span class="n">delta_seconds</span><span class="o">=</span><span class="mf">12.0</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">log_files</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">parallel_arithmetic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ngrid</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">provided_minfq</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span> <span class="n">provided_maxfq</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">solver</span> <span class="o">=</span> <span class="n">ParallelSolver</span><span class="p">(</span><span class="n">data_manager</span><span class="o">=</span><span class="n">data_manager</span><span class="p">,</span> <span class="n">delta_seconds</span><span class="o">=</span><span class="mf">12.0</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">log_files</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">parallel_arithmetic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ntau</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span><span class="n">ngrid</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">provided_minfq</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span> <span class="n">provided_maxfq</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;fixed&#39;</span><span class="p">)</span>
 
 <span class="c1"># Run &amp; store into results2.csv</span>
 <span class="n">solver</span><span class="o">.</span><span class="n">process_ids</span><span class="p">(</span><span class="n">setids</span><span class="p">,</span> <span class="s1">&#39;results2.csv&#39;</span><span class="p">)</span>
@@ -2743,6 +2766,12 @@ ID,Sampling_1,Sampling_2,Common period (Band1 &amp; Band1),Upper error bound,Low
 
 </pre></div></div>
 </div>
+</section>
+</section>
+<section id="Dynamical-Mode-Setup">
+<h2>Dynamical Mode Setup<a class="headerlink" href="#Dynamical-Mode-Setup" title="Link to this heading"></a></h2>
+<p>In <em>Dynamical Mode</em>, the solver can handle datasets with varying filters and dynamic sampling rates. This mode requires the use of <code class="docutils literal notranslate"><span class="pre">DynamicalDataManager</span></code> from the <code class="docutils literal notranslate"><span class="pre">dynamical_mode</span></code> module.</p>
+<p>For more information on configuring this mode, refer to the <em>Dynamical Mode</em> section in the documentation.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
@@ -2751,6 +2780,7 @@ ID,Sampling_1,Sampling_2,Common period (Band1 &amp; Band1),Upper error bound,Low
 </pre></div>
 </div>
 </div>
+</section>
 </section>
 
 

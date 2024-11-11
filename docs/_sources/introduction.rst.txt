@@ -14,7 +14,7 @@ Theoretical background
 
 Quasar emission often exhibits red noise, which manifests as self-similar patterns over varying time scales. This characteristic makes it difficult to identify clear signals of quasi-periodic oscillations (QPO) or binary systems due to the Fourier uncertainty principle. To address these challenges, we have developed a pipeline for **nonlinear periodicity detection**.
 
-Traditional periodograms transform time-domain signals into the frequency domain. While effective for stationary frequency spectra, this method falls short when handling non-stationary signals, which are common in quasar light curves. 
+Traditional periodograms transform time-domain signals into the frequency domain. While effective for stationary frequency spectra, this method falls short when handling non-stationary signals, which are common in quasar light curves.
 The cornerstone of our approach is the **2DHybrid method**. Distinct from traditional Fourier methods, the 2DHybrid technique auto or cross-correlates wavelet matrices from one or two signals, transforming them into a two-dimensional domain of period correlations. We specifically use the **Weighted Wavelet Z-transform (WWZ)**, which is highly effective in uncovering periodicities within quasar light curves. The cross-correlation of wavelet  matrices of signals, :math:`x(t)` and :math:`y(t)`, is defined by:
 
 .. math::
@@ -57,7 +57,7 @@ Key Features
 Performance and Scalability
 ---------------------------
 
-We  tested **Quasar harmonic eXplorer (QhX)** across the **LSST AGN Data Challenge** and **GAIA DR3**. These tests were conducted on platforms ranging from the the in-house high-performance computing (HPC) stations to  **ATOS AI Platform** with four Nvidia servers and 120k cores,and personal devices, ensuring cross-platform compatibility. 
+We  tested **Quasar harmonic eXplorer (QhX)** across the **LSST AGN Data Challenge** and **GAIA DR3**. These tests were conducted on platforms ranging from the the in-house high-performance computing (HPC) stations to  **ATOS AI Platform** with four Nvidia servers and 120k cores,and personal devices, ensuring cross-platform compatibility.
 
 .. figure:: _static/inhouse.png
    :align: left
@@ -96,13 +96,13 @@ Modules Enhancement, Expansion, Packaging, and Testing
 - **Publications**:
   - `Kovacevic et al. 2022 <https://www.mdpi.com/2227-7390/10/22/4278>`_
   - `Kovacevic 2024 (accepted)
-  - `Kovacevic et al. (in prep)` 
+  - `Kovacevic et al. (in prep)`
 
 Parallelization
 ---------------
 - **Contributor**: Momcilo Tosic, AI guest student under the mentorship of Andjelka Kovacevic
 - **Publication**:
-  - `Kovacevic, Tosic, Ilic et al. (in prep)` 
+  - `Kovacevic, Tosic, Ilic et al. (in prep)`
 
 Testing
 -------

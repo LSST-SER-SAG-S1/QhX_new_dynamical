@@ -50,7 +50,7 @@ def process_pool(args):
     and passing them to the appropriate processing function based on the mode.
 
     Args:
-        args (tuple): A tuple containing all the parameters needed for the 
+        args (tuple): A tuple containing all the parameters needed for the
                       processing function. This should include:
                       - set_id (str)
                       - data_manager (DataManager object)

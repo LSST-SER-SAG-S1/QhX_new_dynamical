@@ -1,29 +1,29 @@
-
-from QhX.data_manager import DataManager
+# pylint: disable=R0801
 import numpy as np
 import pandas as pd
 from scipy.interpolate import interp1d
+from QhX.data_manager import DataManager
 
 
 def outliers(time, flux, err_flux=None):
     """
     Identifies and removes outliers from a light curve based on a Z-score threshold.
-    This function applies a Z-score method to identify and remove outliers from light curve data. 
+    This function applies a Z-score method to identify and remove outliers from light curve data.
     If flux error values are provided, the function considers these for a more nuanced outlier detection.
-    
+
     Parameters:
     -----------
     - time (array): Array of time values.
     - flux (array): Array of flux values corresponding to the time values.
-    - err_flux (array, optional): Array of flux error values. If provided, the function 
+    - err_flux (array, optional): Array of flux error values. If provided, the function
       considers error-weighted Z-scores for outlier detection.
 
     Returns:
     --------
-    tuple: A tuple consisting of arrays of time and flux values with outliers removed. 
-    If 'err_flux' is provided, returns a third array of flux error values with 
+    tuple: A tuple consisting of arrays of time and flux values with outliers removed.
+    If 'err_flux' is provided, returns a third array of flux error values with
     outliers removed.
-    
+
     Example:
     --------
     Assuming `time`, `flux`, and `err_flux` are arrays with light curve data:
@@ -74,18 +74,18 @@ def outliers_mad(time, flux, err_flux=None, threshold_factor=3.0):
       If provided, these values adjust the outlier detection threshold.
     - threshold_factor (float, optional): A multiplier used with MAD to set the threshold
       for outlier detection. Default is 3.0. Smaller values imply stricter outlier removal.
-    
+
     Returns:
     --------
     - clean_time (array): Array of time values with outliers removed.
     - clean_flux (array): Array of flux values with outliers removed.
     - clean_err_flux (array, optional): Array of error flux values with outliers removed,
       returned only if `err_flux` is provided.
-    
+
     Example:
     --------
     Assuming `time`, `flux`, and `err_flux` are arrays with light curve data:
-    
+
     >>> clean_time, clean_flux = outliers_mad(time, flux)
     >>> clean_time, clean_flux, clean_err_flux = outliers_mad(time, flux, err_flux)
     """
@@ -200,7 +200,7 @@ def get_lctiktok(data_manager, set1, initial_period, damping_factor_amplitude, d
        # Retrieve the light curve data for the specified set
     # Retrieve and process the light curve data for the specified set
     demo_lc = data_manager.fs_gp.get_group(set1)
- 
+
     # Process the data for each filter, sort by MJD, drop rows where MJD is 0 or NaN
     d0, d1, d2, d3 = [
         demo_lc[(demo_lc['filter'] == f) & (demo_lc['mjd'] != 0)].sort_values(by=['mjd']).dropna()
@@ -234,7 +234,7 @@ def get_lc22(data_manager, set1, include_errors=True):
     """
     Process and return light curves with an option to include magnitude errors for a given set ID.
     This version is for fixed filters ranging from 0 to 3 and preserves MJD precision.
-    
+
     Parameters:
     -----------
     - set1 (str): The object ID for which light curves are to be processed.
@@ -248,10 +248,10 @@ def get_lc22(data_manager, set1, include_errors=True):
     if set1 not in data_manager.fs_gp.groups:
         print(f"Set ID {set1} not found.")
         return None
-    
+
     # Fetch data for the given object ID
     demo_lc = data_manager.fs_gp.get_group(set1)
-    
+
     # Initialize containers for time series data and sampling rates
     tt_with_errors = {0: None, 1: None, 2: None, 3: None}
     ts_with_errors = {0: None, 1: None, 2: None, 3: None}

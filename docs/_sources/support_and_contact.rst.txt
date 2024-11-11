@@ -13,12 +13,12 @@ Bug Reports and Issues
 
 3. **Submit a New Issue:**
    If your issue is new, please provide the following information:
-   
+
    - A clear and concise description of the problem.
    - Steps to reproduce the issue, including any code snippets or data samples.
    - The version of `QhX` or `QhX_dynamical` you are using (e.g., 0.1.1 or 0.1.0).
    - The Python version and operating system you are using.
-   
+
    You can submit your issue [here](https://github.com/lionandjelka/).
 
 4. **Handling Critical Bugs:**

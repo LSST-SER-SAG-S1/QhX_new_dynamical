@@ -34,12 +34,12 @@ def process1tiktok(data_manager,set1, initial_period, damping_factor_amplitude, 
     peaks3, hh3, r_periods3, up3, low3 = periods(int(set1), corr3, 3200, plot=False)
     r_periods01, u01, low01, sig01 = same_periods(r_periods0, r_periods1, up0, low0, up1, low1, peaks0, hh0, tt0, yy0, peaks1, hh1, tt1, yy1, ntau=ntau, ngrid=ngrid, minfq=minfq, maxfq=maxfq)
     print(set1)
-    if r_periods01.size > 0 and u01.size > 0 and low01.size > 0 and sig01.size > 0: 
+    if r_periods01.size > 0 and u01.size > 0 and low01.size > 0 and sig01.size > 0:
         for j in range(len(r_periods01.ravel())):
             det_periods.append([int(set1), sampling0, sampling1, r_periods01[j], u01[j], low01[j], sig01[j], 12])
     elif r_periods01.size == 0:
         det_periods.append([int(set1), 0, 0, 0, 0, 0, 0, 12])
-   
+
     r_periods02, u02, low02, sig02 = same_periods(r_periods0, r_periods2, up0, low0, up2, low2, peaks0, hh0, tt0, yy0, peaks2, hh2, tt2, yy2, ntau=ntau, ngrid=ngrid, minfq=minfq, maxfq=maxfq)
     if r_periods02.size > 0 and u02.size > 0 and low02.size > 0 and sig02.size > 0:
         for j in range(len(r_periods02.ravel())):
@@ -49,7 +49,7 @@ def process1tiktok(data_manager,set1, initial_period, damping_factor_amplitude, 
     r_periods03, u03, low03, sig03 = same_periods(r_periods0, r_periods3, up0, low0, up3, low3, peaks0, hh0, tt0, yy0, peaks3, hh3, tt3, yy3, ntau=ntau, ngrid=ngrid, minfq=minfq, maxfq=maxfq)
     if r_periods03.size > 0 and u03.size > 0 and low03.size > 0 and sig03.size > 0:
         for j in range(len(r_periods03.ravel())):
-            det_periods.append([int(set1), sampling0, sampling3, r_periods03[j], u03[j], low03[j], sig03[j], 14]) 
+            det_periods.append([int(set1), sampling0, sampling3, r_periods03[j], u03[j], low03[j], sig03[j], 14])
     elif r_periods03.size == 0:
         det_periods.append([int(set1), 0, 0, 0, 0, 0, 0, 14])
     return np.array(det_periods)
@@ -81,7 +81,7 @@ def process1_new(data_manager, set1, ntau=None, ngrid=None, provided_minfq=None,
     Returns
     -------
     A list of dictionaries representing the results of the analysis performed on light curve data. Each dictionary contains:
-    
+
         - objectid (int): Identifier of the object ID.
         - sampling_i (float): Mean sampling rate in the first band of the pair where a common period is detected.
         - sampling_j (float): Mean sampling rate in the second band in the pair.
@@ -145,7 +145,7 @@ def process1_new(data_manager, set1, ntau=None, ngrid=None, provided_minfq=None,
                         "lower_error": low_common[k],
                         "significance": round(sig_common[k], 2),  # Ensure two decimal places for significance
                         "label": f"{light_curve_labels[i]}-{light_curve_labels[j]}"
-                    })                    
+                    })
     return det_periods
 
 
@@ -180,7 +180,7 @@ def process1(data_manager, set1, ntau=None, ngrid=None, provided_minfq=None, pro
     Notes
     -----
     The function involves several steps:
-    
+
     - Verifying the existence of the dataset.
     - Retrieving and processing light curve data from different bands.
     - Applying hybrid wavelet techniques to each band's data.
@@ -200,7 +200,7 @@ def process1(data_manager, set1, ntau=None, ngrid=None, provided_minfq=None, pro
     tt0, yy0, tt1, yy1, tt2, yy2, tt3, yy3, sampling0, sampling1, sampling2, sampling3 = light_curves_data
     det_periods = []
 
- #   # TODO CHECK THIS FUNCTION AS IT IS NOT USED YETFunction to get or calculate minfq and maxfq
+ #   Function to get or calculate minfq and maxfq
  #   def get_or_estimate_freq(tt, known_minfq, known_maxfq):
  #       if known_minfq is None or known_maxfq is None:
  #           _, fmin, fmax = estimate_wavelet_periods(tt, ngrid)
@@ -232,7 +232,7 @@ def process1(data_manager, set1, ntau=None, ngrid=None, provided_minfq=None, pro
             if len(r_periods_common) > 0:
                 for k in range(len(r_periods_common)):
                     det_periods.append([
-                        set1, r_periods_common[k], u_common[k], low_common[k], sig_common[k], 
+                        set1, r_periods_common[k], u_common[k], low_common[k], sig_common[k],
                         f"{light_curve_labels[i]}-{light_curve_labels[j]}"
                     ])
 
@@ -243,7 +243,7 @@ def process1(data_manager, set1, ntau=None, ngrid=None, provided_minfq=None, pro
 
 def same_periods(r_periods0, r_periods1, up0, low0, up1, low1, peaks0, hh0, tt0, yy0, peaks1, hh1, tt1, yy1, ntau, ngrid, minfq, maxfq):
     """
-    Analyzes and identifies common periods between two sets of light curve data, 
+    Analyzes and identifies common periods between two sets of light curve data,
     assessing their consistency and statistical significance based on a relative tolerance.
     """
 

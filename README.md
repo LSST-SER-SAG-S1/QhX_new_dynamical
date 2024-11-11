@@ -1,4 +1,6 @@
 # QhX: Quasar harmonics eXplorer
+[![Python CI Workflow](https://github.com/lionandjelka/QhX_new_dynamical/actions/workflows/CI-pylint.yml/badge.svg)](https://github.com/lionandjelka/QhX_new_dynamical/actions/workflows/CI-pylint.yml)
+[![pages-build-deployment](https://github.com/lionandjelka/QhX_new_dynamical/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/lionandjelka/QhX_new_dynamical/actions/workflows/pages/pages-build-deployment)
 
 Framework for 2D Hybrid Method.
 
@@ -46,12 +48,12 @@ The package will be separated into a few different modules:
 - **Publications**:
   - [Kovacevic et al. 2022](https://www.mdpi.com/2227-7390/10/22/4278)
   - Kovacevic 2024 (accepted)
-  - Kovacevic et al. (in prep) 
+  - Kovacevic et al. (in prep)
 
 ### Parallelization
 - **Contributor**: Momcilo Tosic, AI guest student under the mentorship of Andjelka Kovacevic
 - **Publication**:
-  - Kovacevic, Tosic, Ilic et al. (in prep) 
+  - Kovacevic, Tosic, Ilic et al. (in prep)
 
 ### Testing
 - **Contributors**:

@@ -28,10 +28,9 @@ Usage Recommendations
 
 Examples and Support for Both Modes
 -----------------------------------
-The usage examples in the documentation showcase how to implement both dynamic and fixed modes with `QhX_dynamical`. This ensures you have guidance on how to use the package effectively, whether you choose the dynamic or fixed configuration.
+The usage examples in the documentation showcase how to implement both dynamic and fixed modes with `QhX_dynamical`.  Example for the **dynamical mode** of the package is given in :ref:`dynamical_mode`.
 
 When using the fixed mode with `QhX_dynamical`, all functionalities from `QhX` (version 0.1.1) are available, providing complete compatibility and functionality in a single package.
-
 
 License and Open-Source Information
 -----------------------------------

@@ -88,9 +88,9 @@
              
   <h1>Source code for iparallelization_solver</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">The `iparallelization_solver` interface is designed for parallel execution of an input function. </span>
+<span class="sd">The `iparallelization_solver` interface is designed for parallel execution of an input function.</span>
 
-<span class="sd">This module defines the `IParallelSolver` class, which orchestrates the parallel execution of a </span>
+<span class="sd">This module defines the `IParallelSolver` class, which orchestrates the parallel execution of a</span>
 <span class="sd">general processing function on a data set consisting of multiple independent data subsets, here reffered to as set IDs.</span>
 <span class="sd">It also declares a logging method (intended to start a separate logging thread).</span>
 
@@ -112,17 +112,17 @@
 <span class="k">class</span> <span class="nc">IParallelSolver</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A class to manage parallel execution of data processing functions.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Attributes:</span>
 <span class="sd">        num_workers (int): Number of worker processes to spawn.</span>
-<span class="sd">    &quot;&quot;&quot;</span>    
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">num_workers</span> <span class="o">=</span> <span class="n">DEFAULT_NUM_WORKERS</span><span class="p">,</span>
                 <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the ParallelSolver with the specified configuration.&quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">num_workers</span> <span class="o">=</span> <span class="n">num_workers</span>
-    
+
 <div class="viewcode-block" id="IParallelSolver.process_wrapper">
 <a class="viewcode-back" href="../iparallelization_solver.html#iparallelization_solver.IParallelSolver.process_wrapper">[docs]</a>
     <span class="k">def</span> <span class="nf">process_wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -130,10 +130,10 @@
 <span class="sd">        Wrapper for the process function to integrate logging and result handling.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        
+
         <span class="c1"># Event used for stopping background log thread</span>
         <span class="n">stopper_event</span> <span class="o">=</span> <span class="kc">None</span>
-        
+
         <span class="c1"># Go through unprocessed sets</span>
         <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_ids_</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
             <span class="c1"># Safely pop from queue</span>
@@ -151,7 +151,7 @@
 
                 <span class="c1"># Call main processing function</span>
                 <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_process_function_result</span><span class="p">(</span><span class="n">set_id</span><span class="p">)</span>
-                
+
                 <span class="c1"># Get results into formatted string</span>
                 <span class="n">res_string</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aggregate_process_function_result</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
@@ -170,10 +170,10 @@
                 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Error stopping logs : &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
 
-        
+
 <div class="viewcode-block" id="IParallelSolver.process_ids">
 <a class="viewcode-back" href="../iparallelization_solver.html#iparallelization_solver.IParallelSolver.process_ids">[docs]</a>
-    <span class="k">def</span> <span class="nf">process_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">set_ids</span><span class="p">,</span> <span class="n">results_file</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>	
+    <span class="k">def</span> <span class="nf">process_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">set_ids</span><span class="p">,</span> <span class="n">results_file</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Processes a list of set IDs using the configured process function in parallel.</span>
 
@@ -196,7 +196,7 @@
         <span class="c1"># Fill input queue</span>
         <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">set_ids</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_ids_</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
-        
+
         <span class="c1"># Generate and start processes</span>
         <span class="n">processes</span> <span class="o">=</span> <span class="p">[</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_wrapper</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_workers</span><span class="p">)]</span>
         <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">processes</span><span class="p">:</span>
@@ -225,7 +225,7 @@
     <span class="k">def</span> <span class="nf">maybe_begin_logging</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">set_id</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
-    
+
 <div class="viewcode-block" id="IParallelSolver.maybe_stop_logging">
 <a class="viewcode-back" href="../iparallelization_solver.html#iparallelization_solver.IParallelSolver.maybe_stop_logging">[docs]</a>
     <span class="k">def</span> <span class="nf">maybe_stop_logging</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
