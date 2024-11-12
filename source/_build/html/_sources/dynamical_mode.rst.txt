@@ -32,6 +32,30 @@ Classes and Functions
 
    For an example of using the `DataManagerDynamical` and `process1_new_dyn` functions with parallel processing, refer to the example in the `Parallelization Solver module` documentation.
 
+Including Errors in Calculations
+--------------------------------
+
+The `include_errors` parameter in the :func:`get_lc_dyn` and :func:`process1_new_dyn` functions allows for the inclusion of magnitude errors in the analysis. By setting `include_errors=True`, observational uncertainties are incorporated into the light curve data, enabling a more realistic assessment of data variability and enhancing the robustness of period detection across different filters.
+
+**Usage:**
+
+- **get_lc_dyn Function:**
+
+  .. code-block:: python
+
+     times, fluxes, sampling_rates = get_lc_dyn(data_manager, set1, include_errors=True)
+
+  Setting `include_errors=True` adds Gaussian noise to the flux values based on the provided magnitude errors, simulating real-world observational data.
+
+- **process1_new_dyn Function:**
+
+  .. code-block:: python
+
+     detected_periods = process1_new_dyn(data_manager, set1, include_errors=True)
+
+**Note:**
+
+Ensure that the dataset includes a  column representing the magnitude errors for each observation. If this column is absent or contains missing values, the `include_errors` parameter will not have any effect.
 
 
 Example Usage
