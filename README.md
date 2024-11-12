@@ -23,13 +23,13 @@ The package will be separated into a few different modules:
     - Numerical catalogue of objects with detected periods and flags related to robustness.
     - Visualization of numerical catalogue.
 
-    For more information, please refer to the [documentation](https://lionandjelka.github.io/QhX1/introduction.html) for a usage guide.
+    For more information, please refer to the [documentation](https://lionandjelka.github.io/QhX_new_dynamical/) for a usage guide.
 
 ## Quick Links
 
 - [Introduction to package](#intro)
 - [Introduction to in-kind proposal](#inkind)
-- [Documentation](https://lionandjelka.github.io/QhX1/introduction.html)
+- [Documentation](https://lionandjelka.github.io/QhX_new_dynamical/)
 
 ## QhX Project History
 

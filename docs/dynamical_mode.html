@@ -63,6 +63,7 @@
 <li class="toctree-l2"><a class="reference internal" href="data_manager.html">data_manager</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Dynamical Mode Module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#classes-and-functions">Classes and Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#including-errors-in-calculations">Including Errors in Calculations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#example-usage">Example Usage</a></li>
 </ul>
 </li>
@@ -193,6 +194,26 @@ Supports datasets with different numbers of filters (e.g., 3 for Gaia, 5 for AGN
 <p class="admonition-title">See also</p>
 <p>For an example of using the <cite>DataManagerDynamical</cite> and <cite>process1_new_dyn</cite> functions with parallel processing, refer to the example in the <cite>Parallelization Solver module</cite> documentation.</p>
 </div>
+</section>
+<section id="including-errors-in-calculations">
+<h2>Including Errors in Calculations<a class="headerlink" href="#including-errors-in-calculations" title="Link to this heading"></a></h2>
+<p>The <cite>include_errors</cite> parameter in the <code class="xref py py-func docutils literal notranslate"><span class="pre">get_lc_dyn()</span></code> and <code class="xref py py-func docutils literal notranslate"><span class="pre">process1_new_dyn()</span></code> functions allows for the inclusion of magnitude errors in the analysis. By setting <cite>include_errors=True</cite>, observational uncertainties are incorporated into the light curve data, enabling a more realistic assessment of data variability and enhancing the robustness of period detection across different filters.</p>
+<p><strong>Usage:</strong></p>
+<ul>
+<li><p><strong>get_lc_dyn Function:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">times</span><span class="p">,</span> <span class="n">fluxes</span><span class="p">,</span> <span class="n">sampling_rates</span> <span class="o">=</span> <span class="n">get_lc_dyn</span><span class="p">(</span><span class="n">data_manager</span><span class="p">,</span> <span class="n">set1</span><span class="p">,</span> <span class="n">include_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Setting <cite>include_errors=True</cite> adds Gaussian noise to the flux values based on the provided magnitude errors, simulating real-world observational data.</p>
+</li>
+<li><p><strong>process1_new_dyn Function:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">detected_periods</span> <span class="o">=</span> <span class="n">process1_new_dyn</span><span class="p">(</span><span class="n">data_manager</span><span class="p">,</span> <span class="n">set1</span><span class="p">,</span> <span class="n">include_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p><strong>Note:</strong></p>
+<p>Ensure that the dataset includes a  column representing the magnitude errors for each observation. If this column is absent or contains missing values, the <cite>include_errors</cite> parameter will not have any effect.</p>
 </section>
 <section id="example-usage">
 <h2>Example Usage<a class="headerlink" href="#example-usage" title="Link to this heading"></a></h2>
